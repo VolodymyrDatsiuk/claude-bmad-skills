@@ -1,0 +1,7 @@
+{
+  "name": "bmad-skills",
+  "version": "1.0.0",
+  "description": "BMAD Skills collection for Claude Code",
+  "skills": ["./skills/"],
+  "keywords": ["bmad", "agile", "ai-driven", "pipeline"]
+}

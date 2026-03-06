@@ -1,0 +1,19 @@
+{
+  "name": "bmad-skills",
+  "owner": {
+    "name": "nick"
+  },
+  "metadata": {
+    "description": "BMAD Skills collection for Claude Code"
+  },
+  "plugins": [
+    {
+      "name": "bmad-skills",
+      "source": "./",
+      "description": "BMAD methodology skills - configurable pipeline for story delivery",
+      "homepage": "https://github.com/terryso/claude-bmad-skills",
+      "license": "MIT",
+      "keywords": ["bmad", "agile", "ai-driven", "pipeline", "skills"]
+    }
+  ]
+}

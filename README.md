@@ -6,14 +6,30 @@ Claude Code Skills collection for BMAD (Breakthrough Method of Agile AI Driven D
 
 ## Installation
 
-Copy the desired skills to your Claude Code skills directory:
+### Option 1: Claude Code Plugin Marketplace (Recommended)
 
 ```bash
-# Copy a single skill
-cp -r .claude/skills/bmad-story-deliver ~/.claude/skills/
+/plugin marketplace add terryso/claude-bmad-skills
+/plugin install bmad-skills
+```
 
-# Or copy all skills
-cp -r .claude/skills/* ~/.claude/skills/
+### Option 2: npx skills
+
+```bash
+npx skills add terryso/claude-bmad-skills
+```
+
+### Option 3: Git Submodule
+
+```bash
+git submodule add https://github.com/terryso/claude-bmad-skills.git .agents/bmad-skills
+```
+
+### Option 4: Clone & Copy
+
+```bash
+git clone https://github.com/terryso/claude-bmad-skills.git
+cp -r claude-bmad-skills/skills/* ~/.claude/skills/
 ```
 
 ## Available Skills
@@ -24,11 +40,7 @@ cp -r .claude/skills/* ~/.claude/skills/
 |-------|---------------|----------|-----------|
 | bmad-story-pipeline | Subagent | Configurable | None |
 | bmad-story-pipeline-worktree | Subagent | Configurable | Worktree |
-| bmad-story-deliver | Subagent | Fixed 6-step | None |
-| bmad-story-worktree | Subagent | Fixed 8-step | Worktree |
-| bmad-story-team-deliver | Agent Team | Fixed 5-step | Context |
 | bmad-epic-pipeline-worktree | Batch | Configurable | Worktree |
-| bmad-epic-worktree | Batch | Fixed | Worktree |
 
 > 💡 **Recommended**: Use `bmad-story-pipeline` or `bmad-story-pipeline-worktree` for configurable workflow.
 
@@ -83,72 +95,6 @@ Run configurable BMAD pipeline in isolated worktree, merge only after tests pass
 
 ---
 
-### bmad-story-deliver
-
-Complete BMAD user story delivery pipeline (Create → Develop → QA → Review → Auto-fix → Update status).
-
-```bash
-/bmad-story-deliver 1.1
-# Or omit argument to auto-select smallest backlog story
-/bmad-story-deliver
-```
-
-**Pipeline steps:**
-1. Create user story
-2. Development
-3. QA automated testing
-4. Code review
-5. Auto-fix HIGH/MEDIUM issues
-6. Update status to Done
-
----
-
-### bmad-story-worktree
-
-Complete user story delivery in isolated git worktree, merge only after all tests pass.
-
-```bash
-/bmad-story-worktree 1.1
-# Or omit argument to auto-select smallest backlog story
-/bmad-story-worktree
-```
-
-**Pipeline steps:**
-1. Create Worktree (isolated dev environment)
-2. Create user story
-3. Development
-4. QA automated testing
-5. Code review
-6. Auto-fix HIGH/MEDIUM issues
-7. Merge branch (only when tests pass + no outstanding issues)
-8. Update status to Done
-
-**Difference from deliver version:**
-| Feature | deliver | worktree |
-|---------|---------|----------|
-| Code isolation | None | Complete isolation |
-| Merge condition | None enforced | Tests pass + fixes complete |
-| Safety level | Medium | High |
-
----
-
-### bmad-story-team-deliver
-
-Run BMAD pipeline using agent teams with isolated context per step.
-
-```bash
-/bmad-story-team-deliver 1-1
-# Or omit argument to auto-select
-/bmad-story-team-deliver
-```
-
-**Features:**
-- Each pipeline step runs in dedicated teammate
-- Fresh context per step (no context pollution)
-- Team coordination for complex workflows
-
----
-
 ### bmad-epic-pipeline-worktree
 
 Deliver entire Epic using configurable pipeline in isolated worktrees.
@@ -160,26 +106,14 @@ Deliver entire Epic using configurable pipeline in isolated worktrees.
 ```
 
 **Features:**
-- Same as `bmad-epic-worktree` but uses `bmad-story-pipeline-worktree`
+- Uses `bmad-story-pipeline-worktree` for each story
 - Configurable pipeline via workflow-steps.md
 - Worktree isolation per story
-
----
-
-### bmad-epic-worktree
-
-Deliver entire Epic by completing all incomplete user stories sequentially.
-
-```bash
-/bmad-epic-worktree 3
-# Or omit argument to auto-select smallest epic with incomplete stories
-/bmad-epic-worktree
-```
 
 **Execution logic:**
 1. Collect all incomplete stories under Epic
 2. Sort by Story number ascending
-3. Call `/bmad-story-worktree` for each story sequentially
+3. Call `/bmad-story-pipeline-worktree` for each story sequentially
 4. Next story starts only after previous completes
 5. If any fails, stop and preserve state
 
@@ -196,25 +130,19 @@ Deliver entire Epic by completing all incomplete user stories sequentially.
 claude-bmad-skills/
 ├── README.md
 ├── README_CN.md
-├── .claude/
-│   └── skills/
-│       ├── bmad-story-deliver/
-│       │   └── SKILL.md
-│       ├── bmad-story-worktree/
-│       │   └── SKILL.md
-│       ├── bmad-story-pipeline/
-│       │   ├── SKILL.md
-│       │   └── references/workflow-steps.md
-│       ├── bmad-story-pipeline-worktree/
-│       │   ├── SKILL.md
-│       │   └── references/workflow-steps.md
-│       ├── bmad-story-team-deliver/
-│       │   └── SKILL.md
-│       ├── bmad-epic-worktree/
-│       │   └── SKILL.md
-│       └── bmad-epic-pipeline-worktree/
-│           └── SKILL.md
-└── LICENSE
+├── LICENSE
+├── .claude-plugin/
+│   ├── marketplace.json
+│   └── plugin.json
+└── skills/
+    ├── bmad-story-pipeline/
+    │   ├── SKILL.md
+    │   └── references/workflow-steps.md
+    ├── bmad-story-pipeline-worktree/
+    │   ├── SKILL.md
+    │   └── references/workflow-steps.md
+    └── bmad-epic-pipeline-worktree/
+        └── SKILL.md
 ```
 
 ## Choosing the Right Skill
@@ -222,11 +150,9 @@ claude-bmad-skills/
 **For single story:**
 - 🌟 **Recommended**: `bmad-story-pipeline` or `bmad-story-pipeline-worktree` (configurable workflow)
 - Need worktree isolation? → `bmad-story-pipeline-worktree`
-- Simple & fast? → `bmad-story-deliver` or `bmad-story-worktree`
 
 **For entire Epic:**
 - 🌟 **Recommended**: `bmad-epic-pipeline-worktree` (configurable workflow)
-- Fixed pipeline? → `bmad-epic-worktree`
 
 ## Contributing
 
