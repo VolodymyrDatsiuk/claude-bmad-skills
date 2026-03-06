@@ -1,4 +1,5 @@
 ---
+name: bmad-story-pipeline-worktree
 description: Run configurable BMAD pipeline in isolated worktree, merge only after tests pass
 argument-hint: <story-number> e.g., 1-1 or 2-3 (optional, auto-selects if omitted)
 ---

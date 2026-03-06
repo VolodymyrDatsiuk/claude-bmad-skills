@@ -1,4 +1,5 @@
 ---
+name: bmad-story-pipeline
 description: Run configurable BMAD pipeline for story delivery using subagent
 argument-hint: <story-number> e.g., 1-1 or 2-3 (optional, auto-selects if omitted)
 ---

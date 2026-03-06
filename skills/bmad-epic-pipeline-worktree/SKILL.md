@@ -1,4 +1,5 @@
 ---
+name: bmad-epic-pipeline-worktree
 description: Deliver entire Epic using configurable pipeline in isolated worktrees
 argument-hint: <epic-number> e.g., 1 or 2 (optional, auto-selects smallest epic with incomplete stories if omitted)
 ---
